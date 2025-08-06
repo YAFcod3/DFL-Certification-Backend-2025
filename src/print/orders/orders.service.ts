@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, InternalServerErrorException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
 import {Order, OrderDocument} from "./schemas/order.schema";
 import {Model, Types} from "mongoose";
 import {DocumentType} from "../requests/enums/enum";
+import {PaginationDto} from "../../common/dtos/pagination.dto";
 
 @Injectable()
 export class OrdersService {
@@ -62,19 +63,53 @@ export class OrdersService {
 
 
 
-    // other service methods
 
-    findAll() {
-        return `This action returns all orders`;
+    async findAll(dto: PaginationDto):Promise<{
+        orders: OrderDocument[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    }> {
+
+        try {
+            const { page, limit } = dto;
+            const skip = (page - 1) * limit;
+
+            const orders = await this.orderModel
+            .find()
+            .populate('requests')
+            .skip(skip)
+            .limit(limit)
+            .exec();
+
+            const total = await this.orderModel.countDocuments().exec();
+
+            return {
+                orders,
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit),
+            };
+        } catch (error) {
+            throw new InternalServerErrorException('Error finding orders');
+        }
+
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} order`;
+    async findOne(id: string): Promise<OrderDocument> {
+        const order  = await this.orderModel.findById(id).populate('requests').exec();
+
+        if (!order) {
+            throw new InternalServerErrorException('Order not found');
+        }
+        return order;
     }
 
-    update(id: number, updateOrderDto: any) {
-        return `This action updates a #${id} order`;
-    }
+    // update(id: number, updateOrderDto: any) {
+    //     return `This action updates a #${id} order`;
+    // }
 
     // remove(id: number) {
     //     return `This action removes a #${id} order`;
