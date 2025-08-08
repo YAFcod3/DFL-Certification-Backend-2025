@@ -1,10 +1,12 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import {CreatePrintRequestDto} from "./dtos/request.dto";
 import {RequestsService} from "./requests.service";
 import {ParseObjectIdPipe} from "@nestjs/mongoose";
 import {PaginationDto} from "../../../common/dtos/pagination.dto";
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller('requests')
+@UseGuards(AuthGuard('jwt'))
 export class RequestsController {
     constructor(private readonly requestsService: RequestsService) {}
 
