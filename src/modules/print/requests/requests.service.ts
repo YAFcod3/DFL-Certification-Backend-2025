@@ -126,6 +126,53 @@ export class RequestsService {
         return request;
     }
 
+    async update(id: string, updateDto: Partial<CreatePrintRequestDto>): Promise<PrintRequest> {
+        const request = await this.printRequestModel.findById(id).exec();
+
+        if (!request) {
+            throw new NotFoundException('Print request not found');
+        }
+
+        const oldDocumentType = request.documentType;
+        const newDocumentType = updateDto.documentType ?? oldDocumentType;
+
+        if (newDocumentType !== oldDocumentType) {
+            await this.ordersService.removeRequestFromOrder(request.order, request._id as Types.ObjectId);
+
+            const newOrder = await this.ordersService.selectAvailableOrder(newDocumentType);
+
+            const newCode = this.generateRequestCode(newOrder);
+
+            request.code = newCode;
+            request.documentType = newDocumentType;
+            request.order = newOrder._id as Types.ObjectId;
+            await this.ordersService.addRequestToOrder(newOrder, request._id as Types.ObjectId);
+        }
+
+        if (updateDto.metadata) {
+            request.metadata = updateDto.metadata;
+        }
+
+        await request.save();
+        return request;
+    }
+
+
+    async remove(id: string): Promise<{ message: string }> {
+        const request  = await this.printRequestModel.findById(id).exec();
+
+        if (!request) {
+            throw new NotFoundException('Print request not found');
+        }
+
+        await this.ordersService.removeRequestFromOrder(request.order, request._id as Types.ObjectId);
+
+        await this.printRequestModel.deleteOne({ _id: id }).exec();
+
+        return { message: 'Print request deleted successfully' };
+    }
+
+
 
 
     private generateRequestCode(order: OrderDocument): string {

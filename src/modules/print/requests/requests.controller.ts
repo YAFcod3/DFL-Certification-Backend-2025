@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query} from '@nestjs/common';
 import {CreatePrintRequestDto} from "./dtos/request.dto";
 import {RequestsService} from "./requests.service";
 import {ParseObjectIdPipe} from "@nestjs/mongoose";
@@ -23,6 +23,21 @@ export class RequestsController {
         return this.requestsService.findOne(id);
     }
 
+
+    @Put(':id')
+    async update(
+        @Param('id', ParseObjectIdPipe) id: string,
+        @Body() updateDto: Partial<CreatePrintRequestDto>,
+    ) {
+        return this.requestsService.update(id, updateDto);
+    }
+
+    @Delete(':id')
+    async remove(@Param('id', ParseObjectIdPipe) id: string) {
+        return this.requestsService.remove(id);
+    }
+
+
     @Get('/order/:id')
     async findRequestsByOrderId(
         @Param('id', ParseObjectIdPipe) orderId: string,
@@ -30,7 +45,6 @@ export class RequestsController {
     ) {
         return this.requestsService.findRequestsByOrderId(orderId, paginationDto);
     }
-
 
 
 

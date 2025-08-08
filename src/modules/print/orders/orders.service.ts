@@ -62,14 +62,6 @@ export class OrdersService {
         return order;
     }
 
-    // update(id: number, updateOrderDto: any) {
-    //     return `This action updates a #${id} order`;
-    // }
-
-    // remove(id: number) {
-    //     return `This action removes a #${id} order`;
-    // }
-
     async selectAvailableOrder(documentType: DocumentType): Promise<OrderDocument> {
         let order = await this.findAvailableOrder(documentType);
 
@@ -118,6 +110,14 @@ export class OrdersService {
         })
         .sort({ createdAt: -1 })
         .exec();
+    }
+
+
+    async removeRequestFromOrder(orderId: Types.ObjectId, requestId: Types.ObjectId): Promise<void> {
+        await this.orderModel.updateOne(
+            { _id: orderId },
+            { $pull: { requests: requestId } },
+        ).exec();
     }
 
 
