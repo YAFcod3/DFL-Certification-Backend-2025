@@ -5,6 +5,8 @@ import {ConfigModule} from "@nestjs/config";
 import {EnvConfiguration} from "../config/env.config";
 import {JoiValidationSchema} from "../config/joi.validation";
 import {PrintModule} from "./print/print.module";
+import {PassportModule} from "@nestjs/passport";
+import {JwtStrategy} from "../common/strategies/jwt.strategy";
 
 dotenv.config();
 
@@ -17,9 +19,10 @@ dotenv.config();
           }
       ) ,
       MongooseModule.forRoot(process.env.MONGO_URI ?? ''),
+      PassportModule.register({ defaultStrategy: 'jwt' }),
       PrintModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [JwtStrategy],
 })
 export class AppModule {}
