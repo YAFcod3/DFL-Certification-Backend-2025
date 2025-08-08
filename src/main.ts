@@ -3,6 +3,7 @@ import {ValidationPipe} from "@nestjs/common";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {AppModule} from "./modules/app.module";
 import {AppUsageInterceptor} from "./modules/print/interceptors/request-log.interceptor";
+import {AppLogsService} from "./modules/app-logs/app-logs.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,8 +19,8 @@ async function bootstrap() {
       })
   );
 
-  app.useGlobalInterceptors(new AppUsageInterceptor());
-
+    const appLogsService = app.get(AppLogsService);
+    app.useGlobalInterceptors(new AppUsageInterceptor(appLogsService));
 
     const config = new DocumentBuilder()
     .setTitle('MS Print Order')

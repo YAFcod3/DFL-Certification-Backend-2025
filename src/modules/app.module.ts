@@ -7,6 +7,7 @@ import {JoiValidationSchema} from "../config/joi.validation";
 import {PrintModule} from "./print/print.module";
 import {PassportModule} from "@nestjs/passport";
 import {JwtStrategy} from "../common/strategies/jwt.strategy";
+import { AppLogsModule } from './app-logs/app-logs.module';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ dotenv.config();
       MongooseModule.forRoot(process.env.MONGO_URI ?? ''),
       PassportModule.register({ defaultStrategy: 'jwt' }),
       PrintModule,
+      AppLogsModule,
   ],
   controllers: [],
   providers: [JwtStrategy],
