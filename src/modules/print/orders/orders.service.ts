@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/mongoose";
 import {Order, OrderDocument} from "./schemas/order.schema";
 import {Model, Types} from "mongoose";
 import {DocumentType} from "../requests/enums/enum";
-import {PaginationDto} from "../../common/dtos/pagination.dto";
+import {PaginationDto} from "../../../common/dtos/pagination.dto";
 
 @Injectable()
 export class OrdersService {
@@ -17,51 +17,6 @@ export class OrdersService {
         [DocumentType.DNI]: 'DNI',
         [DocumentType.ACCREDITATION]: 'ADC',
     };
-
-
-
-    async findAvailableOrder(documentType: DocumentType): Promise<OrderDocument | null> {
-        return this.orderModel
-        .findOne({
-            documentType,
-            $expr: { $lt: [{ $size: '$requests' }, 2] },
-        })
-        .sort({ createdAt: -1 })
-        .exec();
-    }
-
-    async createOrder(documentType: DocumentType): Promise<OrderDocument> {
-        const code = await this.generateOrderCode(documentType);
-        const order = new this.orderModel({
-            documentType,
-            createdAt: new Date(),
-            code,
-            requests: [],
-        });
-        return order.save();
-    }
-
-    async addRequestToOrder(order: OrderDocument, requestId: Types.ObjectId): Promise<void> {
-        order.requests.push(requestId);
-        await order.save();
-    }
-
-    async findLastOrderOfToday(documentType: DocumentType): Promise<OrderDocument | null> {
-        const todayStart = new Date();
-        todayStart.setHours(0, 0, 0, 0);
-        const todayEnd = new Date();
-        todayEnd.setHours(23, 59, 59, 999);
-
-        return this.orderModel
-        .findOne({
-            documentType,
-            createdAt: { $gte: todayStart, $lte: todayEnd },
-        })
-        .sort({ createdAt: -1 })
-        .exec();
-    }
-
-
 
 
     async findAll(dto: PaginationDto):Promise<{
@@ -114,6 +69,57 @@ export class OrdersService {
     // remove(id: number) {
     //     return `This action removes a #${id} order`;
     // }
+
+    async selectAvailableOrder(documentType: DocumentType): Promise<OrderDocument> {
+        let order = await this.findAvailableOrder(documentType);
+
+        if (!order) {
+            order = await this.createOrder(documentType);
+        }
+        return order;
+    }
+
+    private async findAvailableOrder(documentType: DocumentType): Promise<OrderDocument | null> {
+        return this.orderModel
+        .findOne({
+            documentType,
+            $expr: { $lt: [{ $size: '$requests' }, 2] },
+        })
+        .sort({ createdAt: -1 })
+        .exec();
+    }
+
+    private async createOrder(documentType: DocumentType): Promise<OrderDocument> {
+        const code = await this.generateOrderCode(documentType);
+        const order = new this.orderModel({
+            documentType,
+            createdAt: new Date(),
+            code,
+            requests: [],
+        });
+        return order.save();
+    }
+
+    async addRequestToOrder(order: OrderDocument, requestId: Types.ObjectId): Promise<void> {
+        order.requests.push(requestId);
+        await order.save();
+    }
+
+    async findLastOrderOfToday(documentType: DocumentType): Promise<OrderDocument | null> {
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const todayEnd = new Date();
+        todayEnd.setHours(23, 59, 59, 999);
+
+        return this.orderModel
+        .findOne({
+            documentType,
+            createdAt: { $gte: todayStart, $lte: todayEnd },
+        })
+        .sort({ createdAt: -1 })
+        .exec();
+    }
+
 
     private async generateOrderCode(documentType: DocumentType): Promise<string> {
         const prefix = this.prefixMap[documentType];

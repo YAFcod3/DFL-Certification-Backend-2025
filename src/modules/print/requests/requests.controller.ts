@@ -2,7 +2,7 @@ import {Body, Controller, Get, Param, Post, Query} from '@nestjs/common';
 import {CreatePrintRequestDto} from "./dtos/request.dto";
 import {RequestsService} from "./requests.service";
 import {ParseObjectIdPipe} from "@nestjs/mongoose";
-import {PaginationDto} from "../../common/dtos/pagination.dto";
+import {PaginationDto} from "../../../common/dtos/pagination.dto";
 
 @Controller('requests')
 export class RequestsController {

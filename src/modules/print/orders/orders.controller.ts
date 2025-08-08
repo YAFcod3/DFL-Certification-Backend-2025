@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query} from '@nestjs/common';
 import {OrdersService} from "./orders.service";
-import {PaginationDto} from "../../common/dtos/pagination.dto";
 import {ParseObjectIdPipe} from "@nestjs/mongoose";
+import {PaginationDto} from "../../../common/dtos/pagination.dto";
 
 @Controller('orders')
 export class OrdersController {
@@ -16,15 +16,5 @@ export class OrdersController {
     findOne(@Param('id', ParseObjectIdPipe) id: string) {
         return this.ordersService.findOne(id);
     }
-
-    // @Patch(':id')
-    // update(@Param('id') id: string, @Body() updateOrderDto: any) {
-    //     return this.ordersService.update(+id, updateOrderDto);
-    // }
-
-    // @Delete(':id')
-    // remove(@Param('id') id: string) {
-    //     return this.ordersService.remove(+id);
-    // }
 
 }

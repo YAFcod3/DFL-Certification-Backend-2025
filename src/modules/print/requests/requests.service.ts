@@ -5,7 +5,7 @@ import { CreatePrintRequestDto } from './dtos/request.dto';
 import { PrintRequest, PrintRequestDocument } from './schemas/print-request.schema';
 import { OrdersService } from '../orders/orders.service';
 import { OrderDocument } from '../orders/schemas/order.schema';
-import {PaginationDto} from "../../common/dtos/pagination.dto";
+import {PaginationDto} from "../../../common/dtos/pagination.dto";
 
 @Injectable()
 export class RequestsService {
@@ -17,11 +17,7 @@ export class RequestsService {
 
     async create(dto: CreatePrintRequestDto): Promise<PrintRequest> {
        try{
-           let order = await this.ordersService.findAvailableOrder(dto.documentType);
-
-           if (!order) {
-               order = await this.ordersService.createOrder(dto.documentType);
-           }
+           const order = await this.ordersService.selectAvailableOrder(dto.documentType);
 
            const requestCode = this.generateRequestCode(order);
 
