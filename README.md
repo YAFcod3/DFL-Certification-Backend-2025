@@ -45,8 +45,8 @@ Configura estas variables en un archivo `.env` en la raíz del proyecto:
 ```env
 MONGO_URI=
 PORT=
-DB_USER=root
-DB_PASSWORD=printorder25
+DB_USER=
+DB_PASSWORD=
 JWT_SECRET=PjVDl8rTyXCj7Y03JpLhilzmCA6UiVz3
 ALLOWED_APPS=[{"name":"Parranda","url":"https://cervezaparranda.com"},{"name":"Jamazon","url":"https://jamazon.com"}]
 
