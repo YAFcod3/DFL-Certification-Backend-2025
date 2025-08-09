@@ -1,8 +1,8 @@
 import {Injectable, InternalServerErrorException} from '@nestjs/common';
-import { CreateAppLogDto } from './dto/create-app-log.dto';
 import {InjectModel} from "@nestjs/mongoose";
 import {AppLogs} from "./schema/app-log.schema";
 import {Model} from "mongoose";
+import {ICreateAppLog} from "./interfaces/create-app-log.interface";
 
 @Injectable()
 export class AppLogsService {
@@ -10,7 +10,7 @@ export class AppLogsService {
       @InjectModel(AppLogs.name) private appLogModel: Model<AppLogs>,
   ) {}
 
-  async create(createAppLogDto: CreateAppLogDto) {
+  async create(createAppLogDto: ICreateAppLog) {
     const log =  new this.appLogModel(createAppLogDto);
     if (!log) {
       throw new InternalServerErrorException('Error creating app log');
