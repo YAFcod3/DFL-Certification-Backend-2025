@@ -1,0 +1,185 @@
+{
+  "info": {
+    "name": "MS Print Order API",
+    "_postman_id": "12345678-90ab-cdef-1234-567890abcdef",
+    "description": "API para gestión de órdenes y solicitudes de impresión de documentos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Print Requests",
+      "item": [
+        {
+          "name": "Create Print Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "url": { "raw": "{{base_url}}/api/print-requests", "host": ["{{base_url}}"], "path": ["api", "print-requests"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"PASSPORT\",\n  \"notificationType\": \"BATCH\",\n  \"metadata\": {\n    \"number\": \"A1234567\",\n    \"name\": \"Juan Sosa\",\n    \"placeOfBirth\": \"La Habana\",\n    \"countryOfBirth\": \"Cuba\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "List Print Requests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/print-requests?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "print-requests"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Print Request by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/print-requests/{{request_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "print-requests", "{{request_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Print Request",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/print-requests/{{request_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "print-requests", "{{request_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"DNI\",\n  \"notificationType\": \"BATCH\",\n  \"metadata\": {\n    \"number\": \"87654321\",\n    \"name\": \"Maria Perez\",\n    \"address\": \"Ave 84 entre 5 y 6\",\n    \"tomo\": \"5\",\n    \"folio\": \"12\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Print Request",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/print-requests/{{request_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "print-requests", "{{request_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Find Requests by Order ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/print-requests/order/{{order_id}}?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "print-requests", "order", "{{order_id}}"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/orders?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "{{order_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "App Logs",
+      "item": [
+        {
+          "name": "Get Summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/app-logs/summary",
+              "host": ["{{base_url}}"],
+              "path": ["api", "app-logs", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Find Logs by URL",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/app-logs?url=https://cervezaparranda.com",
+              "host": ["{{base_url}}"],
+              "path": ["api", "app-logs"],
+              "query": [
+                { "key": "url", "value": "https://cervezaparranda.com" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Stats by URL",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/app-logs/stats?url=https://cervezaparranda.com",
+              "host": ["{{base_url}}"],
+              "path": ["api", "app-logs", "stats"],
+              "query": [
+                { "key": "url", "value": "https://cervezaparranda.com" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

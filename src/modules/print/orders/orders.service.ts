@@ -75,7 +75,7 @@ export class OrdersService {
         return this.orderModel
         .findOne({
             documentType,
-            $expr: { $lt: [{ $size: '$requests' }, 2] },
+            $expr: { $lt: [{ $size: '$requests' }, 50] },
         })
         .sort({ createdAt: -1 })
         .exec();
