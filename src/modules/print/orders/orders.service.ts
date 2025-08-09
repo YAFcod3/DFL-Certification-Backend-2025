@@ -1,4 +1,4 @@
-import {Injectable, InternalServerErrorException} from '@nestjs/common';
+import {BadRequestException, Injectable, InternalServerErrorException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
 import {Order, OrderDocument} from "./schemas/order.schema";
 import {Model, Types} from "mongoose";
@@ -123,19 +123,32 @@ export class OrdersService {
 
     private async generateOrderCode(documentType: DocumentType): Promise<string> {
         const prefix = this.prefixMap[documentType];
-        const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+
 
         const lastOrder = await this.findLastOrderOfToday(documentType);
 
         let counter = 1;
         if (lastOrder?.code) {
-            const lastCounterStr = lastOrder.code.split('-')[1];
-            if (lastCounterStr) {
+            const lastCounterStr = lastOrder.code.slice(-3);
+            if (lastCounterStr && /^\d{3}$/.test(lastCounterStr)) {
                 counter = parseInt(lastCounterStr, 10) + 1;
             }
         }
 
-        return `${prefix}${dateStr}-${counter.toString().padStart(3, '0')}`;
+        if (counter > 999) {
+            const formattedDate = now.toLocaleDateString('en-EN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            throw new BadRequestException(
+                `No more orders can be generated for ${documentType} on ${formattedDate}`
+            );
+        }
+
+        return `${prefix}${dateStr}${counter.toString().padStart(3, '0')}`;
     }
 
 

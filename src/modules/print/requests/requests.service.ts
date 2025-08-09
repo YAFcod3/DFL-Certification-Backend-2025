@@ -18,12 +18,12 @@ export class RequestsService {
     async create(dto: CreatePrintRequestDto): Promise<PrintRequest> {
        try{
            const order = await this.ordersService.selectAvailableOrder(dto.documentType);
-
            const requestCode = this.generateRequestCode(order);
 
            const newRequest = new this.printRequestModel({
                code: requestCode,
                documentType: dto.documentType,
+               notificationType: dto.notificationType,
                receivedAt: new Date(),
                order: order._id,
                metadata: dto.metadata,
@@ -34,6 +34,10 @@ export class RequestsService {
 
            return newRequest;
        }catch (error) {
+           if (error.name === 'ValidationError') {
+               throw new BadRequestException(error.message);
+           }
+
            if (error instanceof BadRequestException) {
                throw error;
            }
