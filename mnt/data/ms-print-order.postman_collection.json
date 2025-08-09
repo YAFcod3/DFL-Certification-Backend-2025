@@ -133,6 +133,53 @@
           }
         }
       ]
+    },
+    {
+      "name": "App Logs",
+      "item": [
+        {
+          "name": "Get Summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/app-logs/summary",
+              "host": ["{{base_url}}"],
+              "path": ["api", "app-logs", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Find Logs by URL",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/app-logs?url=https://cervezaparranda.com",
+              "host": ["{{base_url}}"],
+              "path": ["api", "app-logs"],
+              "query": [
+                { "key": "url", "value": "https://cervezaparranda.com" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Stats by URL",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }],
+            "url": {
+              "raw": "{{base_url}}/api/app-logs/stats?url=https://cervezaparranda.com",
+              "host": ["{{base_url}}"],
+              "path": ["api", "app-logs", "stats"],
+              "query": [
+                { "key": "url", "value": "https://cervezaparranda.com" }
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }
