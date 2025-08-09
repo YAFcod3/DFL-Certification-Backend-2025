@@ -1,17 +1,20 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 import mongoose, {Document} from "mongoose";
-import {DocumentType} from "../enums/enum";
+import {DocumentType, NotificationType} from "../enums/enum";
 import {PassportMetadataDto} from "../dtos/passport-metadata.dto";
 import {DniMetadataDto} from "../dtos/dni-metadata.dto";
 import {AccreditationMetadataDto} from "../dtos/accreditation-metadata.dto";
 
 @Schema()
 export class PrintRequest {
-    @Prop()
+    @Prop({ required: true })
     code: string;
 
-    @Prop({ enum: DocumentType })
+    @Prop({ enum: DocumentType, required: true  })
     documentType: DocumentType;
+
+    @Prop({ enum: NotificationType, required: true })
+    notificationType: NotificationType;
 
     @Prop()
     receivedAt: Date;
