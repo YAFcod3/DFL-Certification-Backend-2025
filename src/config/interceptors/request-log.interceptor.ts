@@ -6,17 +6,16 @@ import {
     CallHandler,
 } from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
-import {AppLogsService} from "../../app-logs/app-logs.service";
-
+import {AppLogsService} from "../../modules/app-logs/app-logs.service";
 
 const ENDPOINTS_NOT_TO_LOG =[ '/app-logs'];
+
 @Injectable()
 export class AppUsageInterceptor implements NestInterceptor {
     constructor(private readonly appUsageService: AppLogsService) {}
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const req = context.switchToHttp().getRequest();
-
         const isExcluded = ENDPOINTS_NOT_TO_LOG.some(endpoint =>
             req.url.includes(endpoint),
         );
