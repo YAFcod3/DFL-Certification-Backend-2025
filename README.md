@@ -3,6 +3,19 @@
 
 Repositorio: [https://github.com/YAFcod3/DFL-Certification-Backend-2025](https://github.com/YAFcod3/DFL-Certification-Backend-2025)
 
+
+## Descripción
+
+Este microservicio gestiona la creación y administración de órdenes y solicitudes de impresión para documentos (DNI, pasaporte, acreditaciones, etc.).  
+Incluye lógica para limitar órdenes por día, asignar solicitudes a órdenes disponibles y consultar estadísticas de uso.
+
+
+## Requisitos previos
+
+- Node.js >= 18.x
+- Yarn >= 1.22.x
+- Docker y Docker Compose
+
 ---
 
 ## Instalación y ejecución
@@ -22,7 +35,7 @@ yarn start:dev
 
 Puedes probar los endpoints con Postman importando esta colección:
 
-- [Descargar colección Postman](./mnt/data/ms-print-order.postman_collection.json) *(crea este archivo con el JSON anterior)*
+- [Descargar colección Postman](./mnt/data/ms-print-order.postman_collection.json) 
 
 
 ## Variables de entorno
